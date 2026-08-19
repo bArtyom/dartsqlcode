@@ -1,0 +1,39 @@
+paper: "DART-SQL: Dynamic Action Routing for Text-to-SQL"
+configuration_source: "camera-ready manuscript"
+source_of_truth: "The values reported in the manuscript take precedence."
+
+evaluation:
+  datasets:
+    - "BIRD development set"
+    - "Spider development set"
+  backbones:
+    - "Qwen2.5-Coder-7B-Instruct"
+    - "Gemma-4-E4B-it"
+
+dart_sql:
+  nominal_path_budget: 24
+  routing:
+    epsilon_route: 0.5
+    initial_action_score: 5.0
+    selector_temperature: 0.3
+    selector_parse_attempts: 3
+    fallback_softmax_temperature: 1.0
+  retrieval:
+    edit_similarity_threshold: 0.3
+    semantic_similarity_threshold: 0.6
+  generation_and_revision:
+    candidates_per_action: 5
+    sampling_temperature: 1.0
+
+matched_alpha_sql_baseline:
+  nominal_path_budget: 24
+  expansion_candidates: 3
+  expansion_temperature: 0.8
+  reward_candidates: 5
+  reward_temperature: 1.0
+  final_selection: "execution-based self-consistency"
+
+tuning_protocol:
+  tuned_on: "BIRD training split"
+  frozen_before: "final BIRD development-set evaluation"
+  transferred_without_retuning_to: "Spider development set"
